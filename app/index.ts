@@ -32,8 +32,24 @@ async function notifyServerStatus() {
   (channel as any).send(statusMessage); // 型が合わない場合の対処
 }
 
-client.once("ready", () => {
+async function notifyServerRecovery() {
+  try {
+    const response = await status(MC_SERVER_IP, MC_SERVER_PORT);
+    const channel = await client.channels.fetch(CHANNEL_ID);
+    if (!channel || !channel.isTextBased()) {
+      console.error("指定したチャンネルが見つからないか、テキストチャンネルではありません。");
+      return;
+    }
+    const recoveryMessage = `✅ サーバーが復帰しました！\n現在のプレイヤー数: ${response.players.online}/${response.players.max}`;
+    (channel as any).send(recoveryMessage);
+  } catch (error) {
+    console.log("サーバーはオフラインの状態です。");
+  }
+}
+
+client.once("ready", async () => {
   console.log(`Botがログインしました: ${client.user?.tag}`);
+  await notifyServerRecovery(); // 起動時にサーバー復帰の通知を送信
   setInterval(notifyServerStatus, CHECK_INTERVAL);
 });
 
