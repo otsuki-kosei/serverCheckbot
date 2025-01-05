@@ -15,9 +15,9 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 async function checkServerStatus() {
   try {
     const response = await status(MC_SERVER_IP, MC_SERVER_PORT);
-    return `✅ サーバーはオンラインです！\nプレイヤー: ${response.players.online}/${response.players.max}`;
+    return `@silent ✅ サーバーはオンラインです！\nプレイヤー: ${response.players.online}/${response.players.max}`;
   } catch (error) {
-    return `❌ サーバーはオフラインです。`;
+    return `@silent ❌ サーバーはオフラインです。`;
   }
 }
 
@@ -43,7 +43,7 @@ async function notifyServerRecovery() {
     const recoveryMessage = `✅ サーバーが復帰しました！\n現在のプレイヤー数: ${response.players.online}/${response.players.max}`;
     (channel as any).send(recoveryMessage);
   } catch (error) {
-    console.log("サーバーはオフラインの状態です。");
+    console.log("❌サーバーはオフラインです。");
   }
 }
 
